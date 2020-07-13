@@ -8,3 +8,5 @@
 *.gem
 /coverage
 /coverage.data
+.ruby-gemset
+.ruby-version

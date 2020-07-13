@@ -1,172 +1,145 @@
 require 'spec_helper'
 
-describe "SubdomainFu URL Writing" do
+describe 'SubdomainFu URL Writing' do
   before do
     SubdomainFu.config.tld_size = 1
     SubdomainFu.config.mirrors = SubdomainFu::Configuration.defaults[:mirrors].dup
     SubdomainFu.config.override_only_path = true
     SubdomainFu.config.preferred_mirror = nil
-    default_url_options[:host] = "example.com"
+    default_url_options[:host] = 'example.com'
   end
 
-  describe "#url_for" do
-    it "should be able to add a subdomain" do
-      url_for(:controller => "something", :action => "other", :subdomain => "awesome").should == "http://awesome.example.com/something/other"
+  describe '#url_for' do
+    it 'able to add a subdomain' do
+      url = url_for(controller: 'something', action: 'other', subdomain: 'awesome')
+
+      expect(url).to eq('http://awesome.example.com/something/other')
     end
 
-    it "should be able to remove a subdomain" do
-      url_for(:controller => "something", :action => "other", :subdomain => false, :host => "awesome.example.com").should == "http://example.com/something/other"
+    it 'ables to remove a subdomain' do
+      url = url_for(controller: 'something', action: 'other', subdomain: false, host: 'awesome.example.com')
+
+      expect(url).to eq('http://example.com/something/other')
     end
 
-    it "should not change a mirrored subdomain" do
-      url_for(:controller => "something", :action => "other", :subdomain => false, :host => "www.example.com").should == "http://www.example.com/something/other"
+    it 'does not change a mirrored subdomain' do
+      url = url_for(controller: 'something', action: 'other', subdomain: false, host: 'www.example.com')
+
+      expect(url).to eq('http://www.example.com/something/other')
     end
 
-    it "should should not force the full url with :only_path if override_only_path is false (default)" do
+    it 'does not force the full url with :only_path if override_only_path is false (default)' do
       SubdomainFu.config.override_only_path = false
-      url_for(:controller => "something", :action => "other", :subdomain => "awesome", :only_path => true).should == "/something/other"
+      url = url_for(controller: 'something', action: 'other', subdomain: 'awesome', only_path: true)
+
+      expect(url).to eq('/something/other')
     end
 
-    it "should should force the full url, even with :only_path if override_only_path is true" do
+    it 'force the full url, even with :only_path if override_only_path is true' do
       SubdomainFu.config.override_only_path = true
-      url_for(:controller => "something", :action => "other", :subdomain => "awesome", :only_path => true).should == "http://awesome.example.com/something/other"
+      url = url_for(controller: 'something', action: 'other', subdomain: 'awesome', only_path: true)
+
+      expect(url).to eq('http://awesome.example.com/something/other')
     end
   end
 
-  describe "Standard Routes" do
-    it "should be able to add a subdomain" do
-      needs_subdomain_url(:subdomain => "awesome").should == "http://awesome.example.com/needs_subdomain"
+  describe 'Standard Routes' do
+    it 'able to add a subdomain' do
+      url = needs_subdomain_url(subdomain: 'awesome')
+
+      expect(url).to eq('http://awesome.example.com/needs_subdomain')
     end
 
-    it "should be able to remove a subdomain" do
-      default_url_options[:host] = "awesome.example.com"
-      needs_subdomain_url(:subdomain => false).should == "http://example.com/needs_subdomain"
+    it 'able to remove a subdomain' do
+      default_url_options[:host] = 'awesome.example.com'
+      url = needs_subdomain_url(subdomain: false)
+
+      expect(url).to eq('http://example.com/needs_subdomain')
     end
 
-    it "should not change a mirrored subdomain" do
-      default_url_options[:host] = "www.example.com"
-      needs_subdomain_url(:subdomain => false).should == "http://www.example.com/needs_subdomain"
-    end
+    it 'does not change a mirrored subdomain' do
+      default_url_options[:host] = 'www.example.com'
+      url = needs_subdomain_url(subdomain: false)
 
-    it "should should not force the full url with _path" do
-      SubdomainFu.config.override_only_path = false
-      needs_subdomain_path(:subdomain => "awesome", only_path: true).should ==  "/needs_subdomain"
-    end
-
-    it "should not force the full url if it's the same as the current subdomain" do
-      default_url_options[:host] = "awesome.example.com"
-      needs_subdomain_path(:subdomain => "awesome", only_path: true).should == "/needs_subdomain"
-    end
-
-    it "should not force the full url even if it's a different subdomain" do
-      SubdomainFu.config.override_only_path = false
-      default_url_options[:host] = "awesome.example.com"
-      needs_subdomain_path(:subdomain => "crazy", only_path: true).should == "/needs_subdomain"
-    end
-
-    it "should not force the full url if the current subdomain is nil and so is the target" do
-      needs_subdomain_path(:subdomain => nil, only_path: true).should == "/needs_subdomain"
-    end
-
-    it "should not force the full url if no :subdomain option is given" do
-      needs_subdomain_path(only_path: true).should == "/needs_subdomain"
-      default_url_options[:host] = "awesome.example.com"
-      needs_subdomain_path(only_path: true).should == "/needs_subdomain"
-    end
-
-    describe "With override_only_path set to true" do
-      before(:each) do
-        SubdomainFu.config.override_only_path = true
-      end
-
-      it "should should force the full url, even with _path" do
-        needs_subdomain_path(:subdomain => "awesome").should == needs_subdomain_url(:subdomain => "awesome")
-      end
-
-      it "should not force the full url if it's the same as the current subdomain" do
-        default_url_options[:host] = "awesome.example.com"
-        needs_subdomain_path(:subdomain => "awesome", only_path: true).should == "/needs_subdomain"
-      end
-
-      it "should force the full url if it's a different subdomain" do
-        default_url_options[:host] = "awesome.example.com"
-        needs_subdomain_path(:subdomain => "crazy").should == "http://crazy.example.com/needs_subdomain"
-      end
-
-      it "should not force the full url if the current subdomain is nil and so is the target" do
-        needs_subdomain_path(:subdomain => nil, only_path: true).should == "/needs_subdomain"
-      end
-
-      it "should not force the full url if no :subdomain option is given" do
-        needs_subdomain_path(only_path: true).should == "/needs_subdomain"
-        default_url_options[:host] = "awesome.example.com"
-        needs_subdomain_path(only_path: true).should == "/needs_subdomain"
-      end
+      expect(url).to eq('http://www.example.com/needs_subdomain')
     end
   end
 
   describe "Resourced Routes" do
-    it "should be able to add a subdomain" do
-      foo_url(:id => "something", :subdomain => "awesome").should == "http://awesome.example.com/foos/something"
+    it 'be able to add a subdomain' do
+      url = foo_url(id: 'something', subdomain: 'awesome')
+
+      expect(url).to eq('http://awesome.example.com/foos/something')
     end
 
-    it "should be able to remove a subdomain" do
-      default_url_options[:host] = "awesome.example.com"
-      foo_url(:id => "something", :subdomain => false).should == "http://example.com/foos/something"
+    it 'be able to remove a subdomain' do
+      default_url_options[:host] = 'awesome.example.com'
+      url = foo_url(id: 'something', subdomain: false)
+
+      expect(url).to eq('http://example.com/foos/something')
     end
 
-    it "should work when passed in a paramable object" do
-      foo_url(Paramed.new("something"), :subdomain => "awesome").should == "http://awesome.example.com/foos/something"
+    it 'works when passed in a paramable object' do
+      url = foo_url(Paramed.new('something'), subdomain: 'awesome')
+
+      expect(url).to eq('http://awesome.example.com/foos/something')
     end
 
-    it "should work when passed in a paramable object" do
-      foo_url(Paramed.new("something"), :subdomain => "awesome").should == "http://awesome.example.com/foos/something"
+    it 'works when passed in a paramable object' do
+      url = foo_url(Paramed.new('something'), subdomain: 'awesome')
+
+      expect(url).to eq('http://awesome.example.com/foos/something')
     end
 
-    it "should work when passed in a paramable object and no subdomain to a _path" do
-      default_url_options[:host] = "awesome.example.com"
-      foo_path(Paramed.new("something"), only_path: true).should == "/foos/something"
+    it 'works when passed in a paramable object and no subdomain to a _url' do
+      default_url_options[:host] = 'awesome.example.com'
+      url = foo_url(Paramed.new('something'))
+
+      expect(url).to eq('http://awesome.example.com/foos/something')
     end
 
-    it "should work when passed in a paramable object and no subdomain to a _url" do
-      default_url_options[:host] = "awesome.example.com"
-      foo_url(Paramed.new("something")).should == "http://awesome.example.com/foos/something"
+    it 'works on nested resource collections' do
+      url = foo_bars_url(Paramed.new('something'), subdomain: 'awesome')
+
+      expect(url).to eq('http://awesome.example.com/foos/something/bars')
     end
 
-    it "should work on nested resource collections" do
-      foo_bars_url(Paramed.new("something"), :subdomain => "awesome").should == "http://awesome.example.com/foos/something/bars"
-    end
+    it 'works on nested resource members' do
+      url = foo_bar_url(Paramed.new('something'), Paramed.new('else'), subdomain: 'awesome')
 
-    it "should work on nested resource members" do
-      foo_bar_url(Paramed.new("something"),Paramed.new("else"), :subdomain => "awesome").should == "http://awesome.example.com/foos/something/bars/else"
+      expect(url).to eq('http://awesome.example.com/foos/something/bars/else')
     end
   end
 
-  describe "Preferred Mirror" do
+  describe 'Preferred Mirror' do
     before do
-      SubdomainFu.config.preferred_mirror = "www"
+      SubdomainFu.config.preferred_mirror = 'www'
       SubdomainFu.config.override_only_path = true
     end
 
-    it "should switch to the preferred mirror instead of no subdomain" do
-      default_url_options[:host] = "awesome.example.com"
-      needs_subdomain_url(:subdomain => false).should == "http://www.example.com/needs_subdomain"
+    it 'switch to the preferred mirror instead of no subdomain' do
+      default_url_options[:host] = 'awesome.example.com'
+
+      expect(needs_subdomain_url(subdomain: false)).to eq('http://www.example.com/needs_subdomain')
     end
 
-    it "should switch to the preferred mirror automatically" do
-      default_url_options[:host] = "example.com"
-      needs_subdomain_url.should == "http://www.example.com/needs_subdomain"
+    it 'switch to the preferred mirror automatically' do
+      default_url_options[:host] = 'example.com'
+
+      expect(needs_subdomain_url).to eq('http://www.example.com/needs_subdomain')
     end
 
-    it "should work when passed in a paramable object and no subdomain to a _url" do
-      default_url_options[:host] = "awesome.example.com"
-      foo_url(Paramed.new("something")).should == "http://awesome.example.com/foos/something"
+    it 'works when passed in a paramable object and no subdomain to a _url' do
+      default_url_options[:host] = 'awesome.example.com'
+
+      expect(foo_url(Paramed.new('something'))).to eq('http://awesome.example.com/foos/something')
     end
 
-    it "should force a switch to no subdomain on a mirror if preferred_mirror is false" do
+    it 'force a switch to no subdomain on a mirror if preferred_mirror is false' do
       SubdomainFu.config.preferred_mirror = false
-      default_url_options[:host] = "www.example.com"
-      needs_subdomain_url(:subdomain => false).should == "http://example.com/needs_subdomain"
+      default_url_options[:host] = 'www.example.com'
+
+      expect(needs_subdomain_url(subdomain: false)).to eq('http://example.com/needs_subdomain')
     end
 
     after do
@@ -176,6 +149,6 @@ describe "SubdomainFu URL Writing" do
 
   after do
     SubdomainFu.config.tld_size = 0
-    default_url_options[:host] = "localhost"
+    default_url_options[:host] = 'localhost'
   end
 end

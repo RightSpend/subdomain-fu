@@ -25,36 +25,35 @@ module SubdomainFu
     self.config ||= Configuration.new
     yield(self.config)
   end
-  
+
   class Configuration
     attr_accessor :tld_sizes, :mirrors, :preferred_mirror, :override_only_path
-    
+
     @@defaults = {
-      :tld_sizes => { :development => 0, :test => 0, :production => 1 }.freeze,
-      :mirrors => %w(www).freeze,
-      :preferred_mirror => nil,
-      :override_only_path => false
+      tld_sizes: { development: 0, test: 0, production: 1 }.freeze,
+      mirrors: %w(www).freeze,
+      preferred_mirror: nil,
+      override_only_path: false
     }.freeze
-    
+
     def initialize
       @@defaults.each_pair do |k, v|
         self.send("#{k}=", (v.dup rescue v))
       end
     end
-    
+
     def self.defaults
       @@defaults
     end
-    
+
     def tld_size=(size)
       tld_sizes[Rails.env.to_sym] = size
     end
-    
+
     def tld_size
       tld_sizes[Rails.env.to_sym]
     end
   end
-
 
   def self.has_domain?(host)
     !host.blank? && !(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.match(host))
@@ -180,9 +179,11 @@ module SubdomainFu
     end
 
     protected
+
     def current_subdomain
       SubdomainFu.current_subdomain(request)
     end
+
     def current_domain
       SubdomainFu.current_domain(request)
     end

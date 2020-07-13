@@ -4,7 +4,6 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "subdomain-fu"
-    gemspec.rubyforge_project = 'subdomain-fu'
     gemspec.summary = "SubdomainFu is a Rails plugin that provides subdomain routing and URL writing helpers."
     gemspec.email = "michael@intridea.com"
     gemspec.homepage = "http://github.com/mbleigh/subdomain-fu"
@@ -32,14 +31,14 @@ begin
 
   namespace :spec do
     desc "Run all specs using rcov."
-    RSpec::Core::RakeTask.new(:rcov => :cleanup_rcov_files) do |t|
+    RSpec::Core::RakeTask.new(rcov: :cleanup_rcov_files) do |t|
       t.rcov = true
       t.rcov_opts = '-Ilib:spec --exclude "gems/.*,features"'
       t.rcov_opts << %[--text-report --sort coverage --html --aggregate coverage.data]
     end
   end
 
-  task :default => :spec
+  task default: :spec
 rescue LoadError
   puts "RSpec-2 not available."
 end

@@ -6,7 +6,6 @@ require 'subdomain_fu/version'
 Gem::Specification.new do |s|
   s.name = %q{subdomain-fu}
   s.version = SubdomainFu::VERSION
-
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ['Michael Bleigh', 'Jared Beck']
   s.date = %q{2011-01-04}
@@ -29,7 +28,6 @@ Gem::Specification.new do |s|
   ]
   s.homepage = %q{http://github.com/mbleigh/subdomain-fu}
   s.require_paths = ["lib"]
-  s.rubyforge_project = %q{subdomain-fu}
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{SubdomainFu is a Rails plugin that provides subdomain routing and URL writing helpers.}
   s.test_files = [
@@ -48,12 +46,9 @@ Gem::Specification.new do |s|
   else
   end
 
-  s.add_runtime_dependency 'rails', '~> 4.2.0'
-
+  s.add_runtime_dependency 'rails', '~> 5.0', '< 6.0'
   s.add_development_dependency 'bundler'
-  s.add_development_dependency 'rspec-core', '~> 2.14.0'
-  s.add_development_dependency 'rspec-expectations', '~> 2.14.0'
-  s.add_development_dependency 'rspec-mocks', '~> 2.14.0'
-
+  s.add_development_dependency 'rspec-core', '~> 3.0'
+  s.add_development_dependency 'rspec-expectations', '~> 3.0'
+  s.add_development_dependency 'rspec-mocks', '~> 3.0'
 end
-

@@ -14,22 +14,22 @@ module SubdomainFu
 end
 
 SubdomainFu::TestApplication.routes.draw do
-  get '/needs_subdomain' => "fu#awesome", :as => 'needs_subdomain'
-  get '/no_subdomain' => "fu#lame", :as => 'no_subdomain'
-  get '/needs_awesome' => "fu#lame", :as => 'needs_awesome'
+  get '/needs_subdomain' => 'fu#awesome', as: :needs_subdomain
+  get '/no_subdomain' => 'fu#lame', as: :no_subdomain
+  get '/needs_awesome' => 'fu#lame', as: :needs_awesome
 
   resources :foos do
     resources :bars
   end
 
-  get '/' => "site#home", :constraints => { :subdomain => '' }
-  #match '/' => "app#home", :constraints => { :subdomain => true }
-  get '/' => "mobile#home", :constraints => { :subdomain => "m" }
+  get '/' => 'site#home', constraints: { subdomain: '' }
+  #match '/' => 'app#home', constraints: { subdomain: true }
+  get '/' => 'mobile#home', constraints: { subdomain: 'm' }
 
-  #match '/subdomain_here' => "app#success", :constraints => { :subdomain => true }
-  get '/no_subdomain_here' => "site#success", :constraints => { :subdomain => '' }
-  get '/m_subdomain_here' => "mobile#success", :constraints => { :subdomain => "m" }
-  get '/numbers_only_here' => "numbers#success", :constraints => { :subdomain => /[0-9]+/ }
+  #match '/subdomain_here' => 'app#success', constraints: { subdomain: true }
+  get '/no_subdomain_here' => 'site#success', constraints: { subdomain: '' }
+  get '/m_subdomain_here' => 'mobile#success', constraints: { subdomain: 'm' }
+  get '/numbers_only_here' => 'numbers#success', constraints: { subdomain: /[0-9]+/ }
 
   get ':controller(/:action(/:id(.:format)))'
 end
@@ -40,7 +40,7 @@ class Paramed
   end
 
   def to_param
-    @param || "param"
+    @param || 'param'
   end
 end
 
