@@ -10,3 +10,4 @@
 /coverage.data
 .ruby-gemset
 .ruby-version
+.bundle/

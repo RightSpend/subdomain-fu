@@ -1,3 +1,3 @@
 module SubdomainFu
-  VERSION = '3.0.0'
+  VERSION = '5.0.0'
 end

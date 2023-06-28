@@ -7,10 +7,10 @@ Gem::Specification.new do |s|
   s.name = %q{subdomain-fu}
   s.version = SubdomainFu::VERSION
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
-  s.authors = ['Michael Bleigh', 'Jared Beck']
-  s.date = %q{2011-01-04}
+  s.authors = ['Diganta Mandal']
+  s.date = %q{2023-06-27}
   s.description = %q{SubdomainFu is a Rails plugin to provide all of the basic functionality necessary to handle multiple subdomain applications (such as Basecamp-esque subdomain accounts and more).}
-  s.email = %q{michael@intridea.com}
+  s.email = %q{diganta@rightspend.com}
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
     "lib/subdomain_fu/subdomain_fu.rb",
     "lib/subdomain_fu/url_rewriter.rb"
   ]
-  s.homepage = %q{http://github.com/mbleigh/subdomain-fu}
+  s.homepage = %q{https://github.com/RightSpend/subdomain-fu}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
   s.summary = %q{SubdomainFu is a Rails plugin that provides subdomain routing and URL writing helpers.}
@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 3
+    s.specification_version = 5
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
     else
@@ -46,7 +46,7 @@ Gem::Specification.new do |s|
   else
   end
 
-  s.add_runtime_dependency 'rails', '~> 5.0', '< 6.0'
+  s.add_runtime_dependency 'rails', '> 6.0', '< 9.0'
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'rspec-core', '~> 3.0'
   s.add_development_dependency 'rspec-expectations', '~> 3.0'
